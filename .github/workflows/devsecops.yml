@@ -66,8 +66,8 @@ jobs:
         with:
           args: >
             -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.organization=negrete-8
-            -Dsonar.projectKey=negrete-8_titan
+            -Dsonar.organization=Oskiir23
+            -Dsonar.projectKey=Oskiir23_titan_projec
             -Dsonar.sources=.
             -Dsonar.python.version=3.9
 
