@@ -4,11 +4,10 @@ import sys
 from zapv2 import ZAPv2
 
 print("="*60)
-print("OWASP ZAP SCAN - Flask App Vulnerable")
+print("OWASP ZAP SCAN - Titan App")
 print("="*60)
 
 api_key = os.environ.get('ZAP_API_KEY', '')
-# 🔵 CAMBIADO: Puerto 5000 para Flask (NO 8000)
 target = 'http://localhost:5000'
 
 print(f"[1] Target: {target}")
@@ -36,7 +35,7 @@ if not conectado:
 
 # Nueva sesión
 print("[4] Creando nueva sesión...")
-zap.core.new_session(name='flask-app-scan', overwrite=True)
+zap.core.new_session(name='titan-scan', overwrite=True)
 
 # Spider
 print("[5] Iniciando spider...")
@@ -74,7 +73,7 @@ print(f"  🟢 LOW: {len(low_alerts)}")
 print(f"  📋 TOTAL: {len(alerts)}")
 
 # ============================================
-# GENERAR REPORTE HTML COMPLETO - SIN NINGÚN LÍMITE
+# GENERAR REPORTE HTML
 # ============================================
 print("[8] Generando reporte HTML detallado...")
 
@@ -83,7 +82,7 @@ html_content = f"""<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OWASP ZAP DAST Report - Flask App</title>
+    <title>OWASP ZAP DAST Report - Titan App</title>
     <style>
         body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; background-color: #f5f5f5; }}
         .container {{ max-width: 1200px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }}
@@ -135,9 +134,6 @@ html_content = f"""<!DOCTYPE html>
         <h2>❌ Alertas de Alto Riesgo (HIGH) - {len(high_alerts)} encontradas</h2>
 """
 
-# ============================================
-# ALERTAS HIGH - TODAS, SIN LÍMITE
-# ============================================
 if high_alerts:
     for alert in high_alerts:
         html_content += f"""
@@ -160,9 +156,6 @@ html_content += f"""
         <h2>🟡 Alertas de Riesgo Medio (MEDIUM) - {len(medium_alerts)} encontradas</h2>
 """
 
-# ============================================
-# ALERTAS MEDIUM - TODAS, SIN LÍMITE
-# ============================================
 if medium_alerts:
     for alert in medium_alerts:
         html_content += f"""
@@ -184,9 +177,6 @@ html_content += f"""
         <h2>🟢 Alertas de Riesgo Bajo (LOW) - {len(low_alerts)} encontradas</h2>
 """
 
-# ============================================
-# ALERTAS LOW - TODAS, SIN LÍMITE
-# ============================================
 if low_alerts:
     for alert in low_alerts:
         html_content += f"""
@@ -235,11 +225,7 @@ else:
     sys.exit(1)
 
 # ============================================
-# RESULTADO FINAL - PIPELINE REAL (SIN IGNORAR)
-# CAMBIO REALIZADO:
-#   - Target: 8000 → 5000 (Flask)
-#   - NO se fuerza exit(0) - El pipeline debe FALLAR
-# MOTIVO: App intencionalmente vulnerable - QUEREMOS ver los fallos
+# RESULTADO FINAL
 # ============================================
 print("\n" + "="*60)
 if len(high_alerts) > 0:
@@ -250,7 +236,7 @@ if len(high_alerts) > 0:
         print(f"     • {alert.get('alert', 'N/A')}")
     if len(high_alerts) > 5:
         print(f"     • ... y {len(high_alerts)-5} más")
-    sys.exit(1)  # 🔴 PIPELINE ROJO - DEBE FALLAR
+    sys.exit(1)  # 🔴 ROJO
 else:
     print("✅ PIPELINE EXITOSO: No hay vulnerabilidades HIGH")
     sys.exit(0)
